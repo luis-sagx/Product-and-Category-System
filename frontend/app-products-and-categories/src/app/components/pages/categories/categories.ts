@@ -16,7 +16,6 @@ export class Categories implements OnInit {
   showModal = signal(false);
   selectedCategory: Category | null = null;
 
-  // Modelo del formulario
   form: Category = {
     name: '',
     description: '',
@@ -58,7 +57,6 @@ export class Categories implements OnInit {
 
   saveCategory(): void {
     if (this.selectedCategory?.id) {
-      // Actualizar
       this.categoryService.update(this.selectedCategory.id, this.form).subscribe({
         next: () => {
           this.loadCategories();
@@ -67,7 +65,6 @@ export class Categories implements OnInit {
         error: (err) => alert(err.message),
       });
     } else {
-      // Crear
       this.categoryService.create(this.form).subscribe({
         next: () => {
           this.loadCategories();
