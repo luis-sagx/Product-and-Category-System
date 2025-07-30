@@ -18,6 +18,16 @@ export class Products implements OnInit {
   products: Product[] = [];
   showModal = signal(false);
   selectedProduct: Product | null = null;
+  searchTerm: string = '';
+
+  get filteredProducts(): Product[] {
+    if (!this.searchTerm.trim()) return this.products;
+    const term = this.searchTerm.toLowerCase();
+    return this.products.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.description?.toLowerCase().includes(term)
+    );
+  }
 
   form: Product = {
     name: '',
@@ -49,11 +59,9 @@ export class Products implements OnInit {
   openModal(product?: Product): void {
     this.selectedProduct = product || null;
 
-    // Si es edición, copia los datos del producto al formulario
     if (product) {
       this.form = { ...product };
     } else {
-      // Si es nuevo producto, reinicia el formulario
       this.form = {
         name: '',
         description: '',
@@ -77,7 +85,7 @@ export class Products implements OnInit {
 
 
   saveProduct(): void {
-    if (!this.form.name || !this.form.description || this.form.price <= 0) {
+    if (!this.form.name || !this.form.description || this.form.price <= 0  || this.form.name.trim() === '' || this.form.description.trim() === '') {
       Swal.fire({
         icon: 'error',
         title: 'Formulario inválido',

@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CategoryService } from '../../../services/category';
 import { Category } from '../../../models';
@@ -11,15 +13,26 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './categories.html',
   styleUrl: './categories.scss',
 })
+
 export class Categories implements OnInit {
   categories: Category[] = [];
   showModal = signal(false);
   selectedCategory: Category | null = null;
+  searchTerm: string = '';
 
   form: Category = {
     name: '',
     description: '',
   };
+
+  get filteredCategories(): Category[] {
+    if (!this.searchTerm.trim()) return this.categories;
+    const term = this.searchTerm.toLowerCase();
+    return this.categories.filter(c =>
+      c.name.toLowerCase().includes(term) ||
+      c.description?.toLowerCase().includes(term)
+    );
+  }
 
   constructor(private categoryService: CategoryService) {}
 
@@ -44,7 +57,15 @@ export class Categories implements OnInit {
 
   openModal(category?: Category): void {
     this.selectedCategory = category || null;
-    this.form = category ? { ...category } : { name: '', description: '' };
+    if (category) {
+      this.form = { ...category };
+    } else {
+      this.form = {
+        name: '',
+        description: '',
+      };
+    }
+
     this.showModal.set(true);
 
   }
@@ -52,35 +73,78 @@ export class Categories implements OnInit {
   closeModal(): void {
     this.showModal.set(false);
     this.selectedCategory = null;
-    this.form = { name: '', description: '' };
+    this.form = { 
+      name: '', 
+      description: '' 
+    };
   }
 
+
   saveCategory(): void {
-    if (this.selectedCategory?.id) {
-      this.categoryService.update(this.selectedCategory.id, this.form).subscribe({
-        next: () => {
-          this.loadCategories();
-          this.closeModal();
-        },
-        error: (err) => alert(err.message),
+    if (!this.form.name || !this.form.description || this.form.name.trim() === '' || this.form.description.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Formulario inválido',
+        text: 'Por favor completa todos los campos correctamente.',
       });
-    } else {
-      this.categoryService.create(this.form).subscribe({
-        next: () => {
-          this.loadCategories();
-          this.closeModal();
-        },
-        error: (err) => alert(err.message),
-      });
+      return;
     }
+
+    const action = this.selectedCategory?.id
+      ? this.categoryService.update(this.selectedCategory.id, this.form)
+      : this.categoryService.create(this.form);
+
+    action.subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: this.selectedCategory?.id ? 'Categoría actualizada' : 'Categoría creada',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        this.loadCategories();
+        this.closeModal();
+      },
+      error: err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.message,
+        });
+      }
+    });
   }
 
   deleteCategory(id: number): void {
-    if (!confirm('¿Seguro que deseas eliminar esta categoría?')) return;
-
-    this.categoryService.delete(id).subscribe({
-      next: () => this.loadCategories(),
-      error: (err) => alert(err.message),
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.categoryService.delete(id).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Producto eliminado',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+            this.loadCategories();
+          },
+          error: err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: err.message,
+            });
+          }
+        });
+      }
     });
   }
+
 }
