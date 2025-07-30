@@ -51,10 +51,49 @@ src/app/
 ├── services/        # Servicios para consumir APIs REST usando HttpClient
 ```
 
-## Endpoints principales
+## Endpoints 
 
-- Productos: [http://localhost:8081/api/products](http://localhost:8081/api/products)
-- Categorías: [http://localhost:8082/api/categories](http://localhost:8082/api/categories)
+### Productos (`http://localhost:8081/api/products`)
+
+- **GET** `/api/products`  
+  Obtiene la lista de productos.
+
+- **GET** `/api/products/{id}`  
+  Obtiene un producto por su ID.
+
+- **POST** `/api/products`  
+  Crea un nuevo producto.
+
+- **PUT** `/api/products/{id}`  
+  Actualiza un producto existente.
+
+- **DELETE** `/api/products/{id}`  
+  Elimina un producto por su ID.
+
+- **GET** `/api/products/count`  
+  Obtiene el total de productos registrados.
+
+---
+
+### Categorías (`http://localhost:8082/api/categories`)
+
+- **GET** `/api/categories`  
+  Obtiene la lista de categorías.
+
+- **GET** `/api/categories/{id}`  
+  Obtiene una categoría por su ID.
+
+- **POST** `/api/categories`  
+  Crea una nueva categoría.
+
+- **PUT** `/api/categories/{id}`  
+  Actualiza una categoría existente.
+
+- **DELETE** `/api/categories/{id}`  
+  Elimina una categoría por su ID.
+
+- **GET** `/api/categories/count`  
+  Obtiene el total de categorías
 
 ## Funcionalidades
 
