@@ -1,11 +1,11 @@
-<h2 class="mb-6 text-2xl font-semibold text-gray-800">Categorías</h2>
+<h2 class="my-6 text-2xl font-semibold text-gray-800">Productos</h2>
 
 <button
   (click)="openModal()"
   class="flex items-center gap-2 px-4 py-2 mb-4 text-white bg-indigo-600 rounded hover:bg-indigo-700"
 >
   <i class="fas fa-plus"></i>
-  Nueva Categoría
+  Nuevo Producto
 </button>
 
 <table class="w-full text-sm text-left border border-gray-300 rounded table-auto">
@@ -49,49 +49,60 @@
     <h3 class="mb-4 text-xl font-semibold text-gray-800">
       {{ selectedProduct?.id ? 'Editar' : 'Nueva' }} Producto
     </h3>
-    <form (ngSubmit)="saveProduct()">
-      <label class="block mb-1 text-sm font-medium text-gray-700">Nombre</label>
-      <input
-        type="text"
-        [(ngModel)]="form.name"
-        name="name"
-        required
-        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
+    <form #productForm="ngForm" (ngSubmit)="saveProduct()" novalidate>
 
-      <label class="block mt-4 mb-1 text-sm font-medium text-gray-700">Descripción</label>
-      <input
-        type="text"
-        [(ngModel)]="form.description"
-        name="description"
-        required
-        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
+  <!-- Nombre -->
+  <label class="block mb-1 text-sm font-medium text-gray-700">Nombre</label>
+  <input
+    type="text"
+    name="name"
+    [(ngModel)]="form.name"
+    required
+    minlength="2"
+    class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-400"
+    [ngClass]="{ 'border-red-500': productForm.submitted && name.invalid }"
+    #name="ngModel"
+  />
+  <small class="text-red-600" *ngIf="productForm.submitted && name.invalid">Nombre requerido (mínimo 2 caracteres)</small>
 
-      <label class="block mt-4 mb-1 text-sm font-medium text-gray-700">Precio</label>
-      <input
-        type="text"
-        [(ngModel)]="form.price"
-        name="price"
-        required
-        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
+  <!-- Descripción -->
+  <label class="block mt-4 mb-1 text-sm font-medium text-gray-700">Descripción</label>
+  <input
+    type="text"
+    name="description"
+    [(ngModel)]="form.description"
+    required
+    class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-400"
+    [ngClass]="{ 'border-red-500': productForm.submitted && description.invalid }"
+    #description="ngModel"
+  />
+  <small class="text-red-600" *ngIf="productForm.submitted && description.invalid">Descripción requerida</small>
 
-      <div class="flex justify-end mt-6 space-x-2">
-        <button
-          type="button"
-          (click)="closeModal()"
-          class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
-        >
-          Guardar
-        </button>
-      </div>
-    </form>
+  <!-- Precio -->
+  <label class="block mt-4 mb-1 text-sm font-medium text-gray-700">Precio</label>
+  <input
+    type="number"
+    name="price"
+    [(ngModel)]="form.price"
+    required
+    min="0.01"
+    step="0.01"
+    class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-400"
+    [ngClass]="{ 'border-red-500': productForm.submitted && price.invalid }"
+    #price="ngModel"
+  />
+  <small class="text-red-600" *ngIf="productForm.submitted && price.invalid">Precio debe ser mayor a 0</small>
+
+  <!-- Botones -->
+  <div class="flex justify-end mt-6 space-x-2">
+    <button type="button" (click)="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">
+      Cancelar
+    </button>
+    <button type="submit" class="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700">
+      Guardar
+    </button>
+  </div>
+</form>
+
   </div>
 </div>

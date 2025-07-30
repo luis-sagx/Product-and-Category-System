@@ -50,4 +50,10 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        return ResponseEntity.ok(productService.countProducts());
+    }
+
 }

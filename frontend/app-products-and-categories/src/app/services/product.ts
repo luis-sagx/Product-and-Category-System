@@ -43,6 +43,12 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
+  getCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count`)
+      .pipe(catchError(this.handleError));
+  }
+
+
   private handleError(error: HttpErrorResponse) {
     const msg = error.error?.message || error.statusText || 'Error desconocido';
     console.error('Error HTTP:', msg);

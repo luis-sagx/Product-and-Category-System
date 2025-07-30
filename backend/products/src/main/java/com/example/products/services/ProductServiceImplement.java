@@ -3,6 +3,7 @@ package com.example.products.services;
 import com.example.products.models.entities.Product;
 import com.example.products.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,4 +51,10 @@ public class ProductServiceImplement implements ProductService{
             productRepository.deleteById(id);
         }
     }
+
+    @Override
+    public long countProducts() {
+        return productRepository.count();
+    }
+
 }

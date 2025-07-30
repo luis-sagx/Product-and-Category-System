@@ -52,6 +52,11 @@ public class CategoryServiceImplement implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    @Override
+    public long countProducts() {
+        return categoryRepository.count();
+    }
+
     private void validate(Category category) {
         if (category.getName() == null || category.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre es obligatorio.");
@@ -63,4 +68,6 @@ public class CategoryServiceImplement implements CategoryService {
             throw new IllegalArgumentException("La descripción no debe superar los 255 caracteres.");
         }
     }
+
+
 }

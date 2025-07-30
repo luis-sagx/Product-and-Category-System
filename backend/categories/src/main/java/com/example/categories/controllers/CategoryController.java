@@ -58,4 +58,10 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        return ResponseEntity.ok(categoryService.countProducts());
+    }
+
 }
