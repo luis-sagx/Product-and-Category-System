@@ -15,13 +15,13 @@ services:
     networks:
       - test-network
 
-  products-backend:
-    image: luissagx/products-backend:latest
-    container_name: products-service
+  categories-backend:
+    image: luissagx/categories-backend:latest
+    container_name: categories-service
     ports:
-      - "8081:8081"
+      - "8082:8082"
     environment:
-      - PORT=8081
+      - PORT=8082
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_DATABASE=test
@@ -32,13 +32,13 @@ services:
     networks:
       - test-network
 
-  categories-backend:
-    image: luissagx/categories-backend:latest
-    container_name: categories-service
+  products-backend:
+    image: luissagx/products-backend:latest
+    container_name: products-service
     ports:
-      - "8082:8082"
+      - "8081:8081"
     environment:
-      - PORT=8082
+      - PORT=8081
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_DATABASE=test
