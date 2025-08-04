@@ -3,66 +3,66 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    container_name: test-db2
+    container_name: mystore-db-luis
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: test
+      MYSQL_DATABASE: mystore_luis
     ports:
-      - "3306:3306"
+      - "3309:3306"
     volumes:
-      - db-data:/var/lib/mysql
+      - mystore-db-luis:/var/lib/mysql
     networks:
-      - test-network
+      - mystore-network-luis
 
   categories-backend:
     image: luissagx/categories-backend:latest
-    container_name: categories-service
+    container_name: categories-service-luis
     ports:
-      - "8082:8082"
+      - "8092:8082"
     environment:
       - PORT=8082
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_DATABASE=test
+      - DB_DATABASE=mystore_luis
       - DB_USER=root
       - DB_PASSWORD=admin
     depends_on:
       - mysql
     networks:
-      - test-network
+      - mystore-network-luis
 
   products-backend:
     image: luissagx/products-backend:latest
-    container_name: products-service
+    container_name: products-service-luis
     ports:
-      - "8081:8081"
+      - "8091:8081"
     environment:
       - PORT=8081
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_DATABASE=test
+      - DB_DATABASE=mystore_luis
       - DB_USER=root
       - DB_PASSWORD=admin
     depends_on:
       - mysql
     networks:
-      - test-network
+      - mystore-network-luis
 
   frontend:
     image: luissagx/super-tienda-frontend:latest
-    container_name: tienda-frontend
+    container_name: tienda-frontend-luis
     ports:
       - "4200:80"
     depends_on:
       - products-backend
       - categories-backend
     networks:
-      - test-network
+      - mystore-network-luis
 
 volumes:
-  db-data:
+  mystore-db-luis:
 
 networks:
-  test-network:
+  mystore-network-luis:
     driver: bridge
